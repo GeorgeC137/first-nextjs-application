@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
+import { SessionProvider } from "next-auth/react";
 
-// Lightweight AuthProvider stub to avoid requiring `next-auth`.
-// Replace this with a real provider (using `next-auth`'s SessionProvider) after installing next-auth.
-const AuthProvider = ({ children }) => {
-  return <>{children}</>;
+const AuthProvider = ({ children, session }) => {
+  // Wrap app with next-auth's SessionProvider so useSession() works
+  return <SessionProvider session={session}>{children}</SessionProvider>;
 };
 
 export default AuthProvider;
