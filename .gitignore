@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/googleAuth
 /.pnp
 .pnp.*
 .yarn/*
