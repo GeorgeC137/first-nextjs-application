@@ -12,7 +12,7 @@ export const GET = async (request) => {
 
         console.log("Posts found:", posts.length);
         return new NextResponse(JSON.stringify(posts), { status: 200 });
-    } catch (err) {2
+    } catch (err) {
         console.error("Database Error:", err);
         return new NextResponse(JSON.stringify({ error: err.message }), { status: 500 });
     }
