@@ -1,5 +1,9 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import User from "@/models/User";
+import bcrypt from "bcryptjs";
+import connect from "@/utils/db";
 
 export const authOptions = {
   providers: [
@@ -14,7 +18,37 @@ export const authOptions = {
         }
       }
     }),
+    CredentialsProvider({
+      id: "credentials",
+      name: "Credentials",
+      async authorize(credentials, req) {
+        await connect();
+
+        try {
+          const user = await User.findOne({
+            email: credentials.email
+          });
+
+          if (user) {
+            const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+            if (isPasswordValid) {
+              return user;
+            } else {
+              throw new Error("Invalid password");
+            }
+          } else {
+            throw new Error("No user found with this email");
+          }
+        } catch (error) {
+          console.log("Error in credentials authorize:", error);
+          return null;
+        }
+      }
+    })
   ],
+  pages: {
+    error: "/dashboard/login",
+  },
   debug: true,
   session: {
     strategy: "jwt",
